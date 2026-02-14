@@ -1,5 +1,7 @@
 const LS_KEY="cozybun_cart";
 
+const FORM_ENDPOINT = "https://formspree.io/f/mbdaoyae";
+
 const MENU={
     ovenkisses:[
         {id:"kumo-choux", name: "Kumo Choux", desc: "Light choux pastry filled with smooth vanilla cream"},
@@ -9,7 +11,7 @@ const MENU={
     softtouches: [
         {id: "milkypurin", name: "Milky Purin", desc: "Silky smooth, lightly sweet classic Japanese dessert"},
         {id: "toffeepurin", name: "Toffee Purin", desc: "Moist date cake, topped with luscious toffee sauce"},
-        {id: "strawberrysago", name: "Strawberry Sago", desc: "Refreshing strawberry milk with tender sago pearls"},
+        {id: "strawberrysago", name: "Pink Sago", desc: "Refreshing strawberry milk with tender sago pearls"},
     ],
 };
 
@@ -115,13 +117,14 @@ function renderCartModal(){
     }
     el.innerHTML = entries.map(([id, qty]) => {
         const name= NAME_BY_ID[id] || id;
+        const desc= NAME_BY_ID[id] || desc;
         return `
             <div class="order-row">
                 <div>
                     <div style="font-weight:800;">${name}</div>
-                    <div class="small">${id}</div>
+                    <div class="small">${desc}</div>
                 </div>
-                <div style="font-weight: 900;">x ${qty}</div>
+                <div style="font-weight: 900;"> x ${qty}</div>
             </div>
         `;
     }).join("");
@@ -157,3 +160,36 @@ document.addEventListener("DOMContentLoaded", () => {
 
     document.getElementById("confirmOrder")?.addEventListener("click", submitOrder);
 })
+
+async function submitOrder(){
+    const cart = loadCart();
+    if(Object.keys(cart).length === 0){
+        alert("Your cart is empty.");
+        return;
+    }
+
+    const payload = {
+        order_summary: formatSummary(cart),
+        total_items: cartCount(cart),
+        submitted_at: new Date().toISOString(),
+    };
+
+    try{
+        const res = await fetch(FORM_ENDPOINT, {
+            method: "POST",
+            headers:{"Content-Type": "application/json", "Accept": "application/json"},
+            body: JSON.stringify(payload),
+        });
+
+        if(!res.ok) throw new Error("Submit failed!");
+        alert("Order submitted!");
+        saveCart({});
+        setBadge({});
+        render();
+        renderCartModal();
+        closeModal();
+    } catch(e) {
+        alert("Could not submit. Check your Form endpoint.");
+    }
+}
+
