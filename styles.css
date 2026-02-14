@@ -150,6 +150,12 @@ body{
     text-align: center;
 }
 
+.cart-icon{
+    width: 26px;
+    height: 26px;
+    display: block;
+}
+
 .section-label{
     font-family: "Cinzel Decorative";
     color: var(--bg);
@@ -362,4 +368,12 @@ body{
     font-size: 11px;
     margin: 15px 0 8px;
     text-align: center;
+}
+
+.empty{
+    font-family: "Neue Machina";
+    font-size: 15px;
+    text-align: center;
+    color: var(--ink);
+    margin: 10px 0 0;
 }

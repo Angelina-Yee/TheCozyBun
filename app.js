@@ -112,7 +112,7 @@ function renderCartModal(){
     const cart = loadCart();
     const entries = Object.entries(cart);
     if(entries.length===0){
-        el.innerHTML= `<div class="small">Your cart is empty.</div>`;
+        el.innerHTML= `<div class="empty">Your cart is empty.</div>`;
         return;
     }
     el.innerHTML = entries.map(([id, qty]) => {
@@ -164,7 +164,7 @@ document.addEventListener("DOMContentLoaded", () => {
 async function submitOrder(){
     const cart = loadCart();
     if(Object.keys(cart).length === 0){
-        alert("Your cart is empty.");
+        alert("Your cart is empty!");
         return;
     }
 
